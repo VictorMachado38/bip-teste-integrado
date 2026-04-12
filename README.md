@@ -65,7 +65,7 @@ Apos subir (~2 min na primeira vez):
 | Correcao do bug no EJB | 20% | ✅               |
 | CRUD + Transferencia | 15% | ✅               |
 | Qualidade de codigo | 10% | ✅               |
-| Testes | 15% | 🔄 Em andamento |
+| Testes | 15% | ✅ Atendido |
 | Documentacao | 10% | ✅               |
 | Frontend Angular | 10% | ✅               |
 
@@ -83,6 +83,9 @@ CRUD completo (`GET / POST / PUT / DELETE`) em `/api/v1/beneficios` + endpoint `
 
 **Qualidade de codigo**
 Separacao de responsabilidades, `@Version` no modelo (optimistic locking), zero logica de negocio no controller, configuracoes externalizadas via variaveis de ambiente.
+
+**Testes**
+22 testes passando — unit tests do `BeneficioServiceImpl` (toda a logica de negocio, incluindo os cenarios do bug EJB) e slice tests do `BeneficioController` (HTTP, JWT e tratamento de erros via `GlobalExceptionHandler`).
 
 **Documentacao**
 Swagger UI disponivel local e em producao. README principal + guia detalhado `COMO-RODAR-LOCAL.md`.
