@@ -1,0 +1,4 @@
+bip-teste-integrado/target/
+.idea/
+**/.DS_Store
+*.iml

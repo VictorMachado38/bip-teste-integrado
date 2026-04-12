@@ -1,0 +1,58 @@
+{
+  "realm": "bip-realm",
+  "enabled": true,
+  "displayName": "BIP - Benefícios",
+  "loginTheme": "bip-theme",
+  "internationalizationEnabled": true,
+  "supportedLocales": ["pt-BR"],
+  "defaultLocale": "pt-BR",
+  "accessTokenLifespan": 300,
+  "ssoSessionMaxLifespan": 36000,
+  "clients": [
+    {
+      "clientId": "bip-frontend",
+      "name": "BIP Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": ["https://app.victor-dev.tech/*"],
+      "webOrigins": ["https://app.victor-dev.tech"],
+      "attributes": {
+        "post.logout.redirect.uris": "https://app.victor-dev.tech/*"
+      }
+    }
+  ],
+  "roles": {
+    "realm": [
+      { "name": "admin", "description": "Administrador do sistema" },
+      { "name": "user", "description": "Usuário padrão" }
+    ]
+  },
+  "users": [
+    {
+      "username": "admin",
+      "email": "admin@bip.com",
+      "firstName": "Admin",
+      "lastName": "BIP",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "admin123", "temporary": false }
+      ],
+      "realmRoles": ["admin", "user"]
+    },
+    {
+      "username": "usuario",
+      "email": "usuario@bip.com",
+      "firstName": "Usuário",
+      "lastName": "BIP",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "user123", "temporary": false }
+      ],
+      "realmRoles": ["user"]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+bip/node_modules/
+bip/dist/
+.idea/
+**/.DS_Store
+*.iml

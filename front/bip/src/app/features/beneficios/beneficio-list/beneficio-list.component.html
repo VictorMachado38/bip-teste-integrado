@@ -1,0 +1,439 @@
+<div class="page">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div>
+        <span class="brand-name">BIP</span>
+        <span class="brand-subtitle">Benefícios</span>
+      </div>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a class="nav-item nav-item--active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
+        </svg>
+        Dashboard
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">{{ (username() || 'U').charAt(0).toUpperCase() }}</div>
+        <div class="user-info">
+          <p class="user-name">{{ username() }}</p>
+          <p class="user-role">{{ roles() }}</p>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()" title="Sair">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
+        </svg>
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <h1 class="topbar__title">Dashboard</h1>
+        <p class="topbar__subtitle">Gerencie seus benefícios em um só lugar</p>
+      </div>
+      <div class="topbar__actions">
+        <button class="btn btn--primary" (click)="openCreateModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Novo Benefício
+        </button>
+        <button class="logout-btn--topbar" (click)="logout()" title="Sair">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
+          </svg>
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="stat-card stat-card--indigo">
+        <div class="stat-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+            <path d="M12 6v6l4 2" />
+          </svg>
+        </div>
+        <div class="stat-card__body">
+          <p class="stat-card__label">Valor Total</p>
+          <h3 class="stat-card__value">{{ formatCurrency(totalValue()) }}</h3>
+        </div>
+        <div class="stat-card__bg"></div>
+      </div>
+
+      <div class="stat-card stat-card--violet">
+        <div class="stat-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+          </svg>
+        </div>
+        <div class="stat-card__body">
+          <p class="stat-card__label">Total de Benefícios</p>
+          <h3 class="stat-card__value">{{ beneficioCount() }}</h3>
+        </div>
+        <div class="stat-card__bg"></div>
+      </div>
+
+      <div class="stat-card stat-card--emerald">
+        <div class="stat-card__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        </div>
+        <div class="stat-card__body">
+          <p class="stat-card__label">Maior Valor</p>
+          <h3 class="stat-card__value">{{ formatCurrency(maxValue()) }}</h3>
+        </div>
+        <div class="stat-card__bg"></div>
+      </div>
+    </section>
+
+    <!-- Table Card -->
+    <section class="table-card">
+      <div class="table-card__header">
+        <div>
+          <h2 class="table-card__title">Benefícios</h2>
+          <p class="table-card__desc">{{ beneficioCount() }} {{ beneficioCount() === 1 ? 'registro' : 'registros' }} encontrados</p>
+        </div>
+        <button class="btn btn--ghost" (click)="loadBeneficios()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6M1 20v-6h6" /><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+          </svg>
+          Atualizar
+        </button>
+      </div>
+
+      @if (loading()) {
+        <div class="state-box">
+          <div class="spinner"></div>
+          <p>Carregando benefícios...</p>
+        </div>
+      } @else if (beneficios().length === 0) {
+        <div class="state-box">
+          <div class="empty-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" />
+              <line x1="9" y1="15" x2="15" y2="15" />
+            </svg>
+          </div>
+          <h3>Nenhum benefício encontrado</h3>
+          <p>Clique em "Novo Benefício" para começar</p>
+          <button class="btn btn--primary" (click)="openCreateModal()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Novo Benefício
+          </button>
+        </div>
+      } @else {
+        <!-- Tabela: desktop -->
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th class="th--right">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (b of beneficios(); track b.id) {
+                <tr>
+                  <td><span class="id-chip">#{{ b.id }}</span></td>
+                  <td>
+                    <div class="beneficio-cell">
+                      <div class="avatar" [style.background]="getAvatarColor(b.nome)">
+                        {{ b.nome.charAt(0).toUpperCase() }}
+                      </div>
+                      <span class="beneficio-name">{{ b.nome }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="value-chip">{{ formatCurrency(b.valor) }}</span>
+                  </td>
+                  <td>
+                    <div class="actions">
+                      <button class="action-btn action-btn--edit" (click)="openEditModal(b)" title="Editar">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        Editar
+                      </button>
+                      <button class="action-btn action-btn--transfer" (click)="openTransferModal(b)" title="Transferir">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                        Transferir
+                      </button>
+                      <button class="action-btn action-btn--delete" (click)="openDeleteModal(b.id!)" title="Excluir">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" />
+                          <path d="M10 11v6M14 11v6M9 6V4h6v2" />
+                        </svg>
+                        Excluir
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cards: mobile -->
+        <div class="beneficio-cards">
+          @for (b of beneficios(); track b.id) {
+            <div class="beneficio-card">
+              <div class="beneficio-card__header">
+                <div class="beneficio-cell">
+                  <div class="avatar" [style.background]="getAvatarColor(b.nome)">
+                    {{ b.nome.charAt(0).toUpperCase() }}
+                  </div>
+                  <div>
+                    <span class="beneficio-name">{{ b.nome }}</span>
+                    <span class="id-chip">#{{ b.id }}</span>
+                  </div>
+                </div>
+                <span class="value-chip">{{ formatCurrency(b.valor) }}</span>
+              </div>
+              <div class="beneficio-card__actions">
+                <button class="action-btn action-btn--edit" (click)="openEditModal(b)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  Editar
+                </button>
+                <button class="action-btn action-btn--transfer" (click)="openTransferModal(b)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                  Transferir
+                </button>
+                <button class="action-btn action-btn--delete" (click)="openDeleteModal(b.id!)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v6M14 11v6M9 6V4h6v2" />
+                  </svg>
+                  Excluir
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </main>
+</div>
+
+<!-- ─── MODAL: Criar / Editar ─── -->
+@if (showFormModal()) {
+  <div class="modal-overlay" (click)="closeModals()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div class="modal__title-group">
+          <div class="modal__icon modal__icon--primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              @if (editingBeneficio()) {
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+              } @else {
+                <path d="M12 5v14M5 12h14" />
+              }
+            </svg>
+          </div>
+          <h3>{{ editingBeneficio() ? 'Editar Benefício' : 'Novo Benefício' }}</h3>
+        </div>
+        <button class="modal__close" (click)="closeModals()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal__body">
+        <div class="field">
+          <label class="field__label">Nome do Benefício</label>
+          <input
+            class="field__input"
+            type="text"
+            [(ngModel)]="formData.nome"
+            placeholder="Ex: Benefício de Alimentação"
+            autocomplete="off"
+          />
+        </div>
+        <div class="field">
+          <label class="field__label">Valor (R$)</label>
+          <div class="field__currency">
+            <span class="field__prefix">R$</span>
+            <input
+              class="field__input field__input--currency"
+              type="number"
+              [(ngModel)]="formData.valor"
+              placeholder="0,00"
+              step="0.01"
+              min="0"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--ghost" (click)="closeModals()">Cancelar</button>
+        <button class="btn btn--primary" (click)="saveForm()" [disabled]="submitting()">
+          @if (submitting()) {
+            <span class="btn-spinner"></span>
+            Salvando...
+          } @else {
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            Salvar
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ─── MODAL: Transferir ─── -->
+@if (showTransferModal()) {
+  <div class="modal-overlay" (click)="closeModals()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div class="modal__title-group">
+          <div class="modal__icon modal__icon--emerald">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </div>
+          <h3>Transferir Saldo</h3>
+        </div>
+        <button class="modal__close" (click)="closeModals()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal__body">
+        <div class="transfer-from">
+          <div class="transfer-from__label">Origem</div>
+          <div class="transfer-from__name">{{ getBeneficioName(transferData.fromId) }}</div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Destino</label>
+          <select class="field__input field__input--select" [(ngModel)]="transferData.toId">
+            <option [value]="0" disabled>Selecione o benefício destino</option>
+            @for (b of transferDestinations; track b.id) {
+              <option [value]="b.id">{{ b.nome }} — {{ formatCurrency(b.valor) }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Valor a transferir</label>
+          <div class="field__currency">
+            <span class="field__prefix">R$</span>
+            <input
+              class="field__input field__input--currency"
+              type="number"
+              [(ngModel)]="transferData.amount"
+              placeholder="0,00"
+              step="0.01"
+              min="0.01"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--ghost" (click)="closeModals()">Cancelar</button>
+        <button class="btn btn--emerald" (click)="doTransfer()" [disabled]="submitting()">
+          @if (submitting()) {
+            <span class="btn-spinner"></span>
+            Transferindo...
+          } @else {
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+            Transferir
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ─── MODAL: Confirmar exclusão ─── -->
+@if (showDeleteModal()) {
+  <div class="modal-overlay" (click)="closeModals()">
+    <div class="modal modal--sm" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div class="modal__title-group">
+          <div class="modal__icon modal__icon--danger">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" />
+              <path d="M10 11v6M14 11v6M9 6V4h6v2" />
+            </svg>
+          </div>
+          <h3>Excluir Benefício</h3>
+        </div>
+        <button class="modal__close" (click)="closeModals()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal__body">
+        <div class="danger-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          <p>Esta ação é irreversível. Tem certeza que deseja excluir este benefício?</p>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--ghost" (click)="closeModals()">Cancelar</button>
+        <button class="btn btn--danger" (click)="confirmDelete()" [disabled]="submitting()">
+          @if (submitting()) {
+            <span class="btn-spinner"></span>
+            Excluindo...
+          } @else {
+            Excluir
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<app-toast />

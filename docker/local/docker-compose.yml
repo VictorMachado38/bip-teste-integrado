@@ -1,0 +1,97 @@
+services:
+
+  # ─── Banco de Dados ───────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: bip-postgres
+    environment:
+      POSTGRES_DB: bipdb
+      POSTGRES_USER: bip
+      POSTGRES_PASSWORD: bip123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bip -d bipdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - bip-net
+
+  # ─── Keycloak (Identity Provider) ────────────────────────────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: bip-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+      KC_HEALTH_ENABLED: "true"
+    command: start-dev --import-realm --health-enabled=true
+    ports:
+      - "8180:8080"
+    volumes:
+      - .:/opt/keycloak/data/import
+      - ./themes:/opt/keycloak/themes
+    healthcheck:
+      # A imagem do Keycloak não tem curl/wget — usa bash TCP nativo
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 2>/dev/null && echo -e 'GET /health/ready HTTP/1.0\r\n\r\n' >&3 && grep -q 'UP' <&3"]
+      interval: 20s
+      timeout: 10s
+      retries: 15
+      start_period: 90s
+    restart: unless-stopped
+    networks:
+      - bip-net
+
+  # ─── Backend (Spring Boot) ────────────────────────────────────────────────────
+  backend:
+#    build:
+#      context: ../../back
+#      dockerfile: Dockerfile
+    image: victormachado38/bip-backend:latest
+    container_name: bip-backend
+    environment:
+      # Sobrescreve application.properties para o ambiente Docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bipdb
+      SPRING_DATASOURCE_USERNAME: bip
+      SPRING_DATASOURCE_PASSWORD: bip123
+      # JWK-set-uri: busca as chaves pelo hostname interno do Docker
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/bip-realm/protocol/openid-connect/certs
+      # Issuer-uri: valida o claim "iss" do token (gerado pelo Keycloak via localhost:8180)
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://localhost:8180/realms/bip-realm
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    restart: on-failure:5
+    networks:
+      - bip-net
+
+  # ─── Frontend (Angular + Nginx) ───────────────────────────────────────────────
+  frontend:
+#    build:
+#      context: ../../front
+#      dockerfile: Dockerfile
+    image: victormachado38/bip-frontend:latest
+    container_name: bip-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - bip-net
+
+# ─── Volumes & Networks ────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+
+networks:
+  bip-net:
+    driver: bridge
