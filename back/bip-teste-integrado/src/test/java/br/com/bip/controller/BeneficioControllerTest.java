@@ -37,7 +37,6 @@ class BeneficioControllerTest {
     @MockBean
     private BeneficioService service;
 
-    // Necessario para evitar que o Spring tente conectar ao Keycloak no boot do teste
     @MockBean
     private JwtDecoder jwtDecoder;
 
