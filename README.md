@@ -33,7 +33,7 @@ O sistema esta no ar e pode ser acessado agora:
 
 Consulte o guia completo — pre-requisitos, usuarios de teste, comandos e solucao de problemas:
 
-📄 **[docs/COMO-RODAR-LOCAL.md](docs/COMO-RODAR-LOCAL.md)**
+📄 **[docs/rodar-local.md](docs/rodar-local.md)**
 
 Em resumo:
 
