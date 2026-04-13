@@ -5,6 +5,16 @@
 
 ---
 
+## 🎬 Demonstracao em video
+
+<div align="center">
+  <a href="https://youtu.be/pZvFQhR7U8o">
+    <img src="https://img.youtube.com/vi/pZvFQhR7U8o/maxresdefault.jpg" alt="Assista a demonstracao do BIP" width="220">
+  </a>
+</div>
+
+---
+
 ## 🌐 Ambiente em producao
 
 O sistema esta no ar e pode ser acessado agora:
