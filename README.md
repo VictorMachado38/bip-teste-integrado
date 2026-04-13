@@ -2,14 +2,14 @@
 
 > Solucao completa para o **Desafio Fullstack Integrado** proposto pelo **Sicoob / Travel Cash**.  
 > Desenvolvido por **Victor Augusto**.
-
+a
 ---
 
 ## 🎬 Demonstracao em video
 
 <div align="center">
   <a href="https://youtu.be/pZvFQhR7U8o">
-    <img src="https://img.youtube.com/vi/pZvFQhR7U8o/maxresdefault.jpg" alt="Assista a demonstracao do BIP" width="220">
+    <img src="https://img.youtube.com/vi/pZvFQhR7U8o/maxresdefault.jpg" alt="Assista a demonstracao do BIP" width="600">
   </a>
 </div>
 
